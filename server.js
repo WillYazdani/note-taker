@@ -1,31 +1,39 @@
+//modules
 const express = require('express');
+const path = require('path');
 const fs = require('fs');
 
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
-//index page
+let notes = fs.readFileSync('./db/db.json');
+notes = JSON.parse(notes);
+
+//home page
 app.get('/', (req, res) => {
     res.sendFile(__dirname, '/index.html');
 });
 
 //notes page
 app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/notes.json'));
+    res.sendFile(path.join(__dirname, '/public/notes.html'));
 });
 
 //API
 app.get('/api/notes', (req, res) => {
-    fs.readFile('./db/db.json', 'utf8', (err, NoteData) => {
-        if (err) {
-            console.log(err);
-        }
-        const notes = JSON.parse(NoteData);
-        res.json(notes)
-    })
+    res.json(notes);
+});
+
+//add notes
+app.post('api/notes', (req, res) => {
+    const addNote = req.body;
+
+    res.end();
 });
 
 app.listen(PORT)
