@@ -21,11 +21,12 @@ app.get('/notes', (req, res) => {
 
 //API
 app.get('/api/notes', (req, res) => {
+    console.log('new note');
     res.json(notes);
 });
 
 //add notes
-app.post('api/notes', (req, res) => {
+app.post('/api/notes', (req, res) => {
     const addNote = req.body;
     notes.push(addNote);
     res.end();
